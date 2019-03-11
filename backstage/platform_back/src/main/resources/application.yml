@@ -20,7 +20,7 @@ spring:
     #url: jdbc:mariadb://localhost:3306/testdb
     #username: root
     #password: 123456
-    url: jdbc:mariadb://192.168.7.229:3306/policydb
+    url: jdbc:mariadb://192.168.5.91:3306/policydb
     username: developer
     password: 123456
     # 数据库连接池

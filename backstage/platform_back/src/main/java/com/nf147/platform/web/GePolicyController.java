@@ -1,7 +1,7 @@
 package com.nf147.platform.web;
 
 import com.nf147.platform.entity.*;
-import com.nf147.platform.service.impl.GePolicyServiceImpl;
+import com.nf147.platform.service.impl.*;
 import com.nf147.platform.util.response.Constants;
 import com.nf147.platform.util.response.JSONResponse;
 import org.mybatis.spring.MyBatisSystemException;
@@ -20,6 +20,21 @@ public class GePolicyController {
 
     @Autowired
     private GePolicyServiceImpl gePolicyService;
+
+    @Autowired
+    private GeFavorServiceImpl geFavorService;
+
+    @Autowired
+    private GeCommentServiceImpl geCommentService;
+
+    @Autowired
+    private GeShareServiceImpl geShareService;
+
+    @Autowired
+    private GeReadServiceImpl geReadService;
+
+    @Autowired
+    private GeUpvoteServiceImpl geUpvoteService;
 
     /**
      * /policy/insert 向政策结构表插入数据
@@ -53,14 +68,20 @@ public class GePolicyController {
     public JSONResponse updatePolicyAndAddRead(@RequestBody GeRead geRead) {
         try {
             if (geRead != null && geRead.getUserId() != null && geRead.getUserId() > 0) {
-
+                int insert = geReadService.insert(geRead);
+                if(insert > 0){
+                    return JSONResponse.OK(Constants.SUCCESS_200);
+                }else{
+                    return JSONResponse.OK(Constants.SUCCESS_202);
+                }
+            }else{
+                return JSONResponse.OK(Constants.SUCCESS_204);
             }
         } catch (MyBatisSystemException ex) {
             return JSONResponse.ERROR(Constants.ERROR_500, ex.getMessage());
         } catch (Exception ex) {
             return JSONResponse.ERROR(Constants.ERROR_408, ex.getMessage());
         }
-        return null;
     }
 
     /**
@@ -72,14 +93,20 @@ public class GePolicyController {
     public JSONResponse updatePolicyAndAddShared(@RequestBody GeShare geShare) {
         try {
             if (geShare != null && geShare.getUserId() != null && geShare.getUserId() > 0) {
-
+                int insert = geShareService.insert(geShare);
+                if(insert > 0){
+                    return JSONResponse.OK(Constants.SUCCESS_200);
+                }else{
+                    return JSONResponse.OK(Constants.SUCCESS_202);
+                }
+            }else{
+                return JSONResponse.OK(Constants.SUCCESS_204);
             }
         } catch (MyBatisSystemException ex) {
             return JSONResponse.ERROR(Constants.ERROR_500, ex.getMessage());
         } catch (Exception ex) {
             return JSONResponse.ERROR(Constants.ERROR_408, ex.getMessage());
         }
-        return null;
     }
 
     /**
@@ -91,14 +118,20 @@ public class GePolicyController {
     public JSONResponse updatePolicyAndAddUpvote(@RequestBody GeUpvote geUpvote) {
         try {
             if (geUpvote != null && geUpvote.getUserId() != null && geUpvote.getUserId() > 0) {
-
+                int insert = geUpvoteService.insert(geUpvote);
+                if(insert > 0){
+                  return JSONResponse.OK(Constants.SUCCESS_200);
+                }else{
+                    return JSONResponse.OK(Constants.SUCCESS_202);
+                }
+            }else{
+                return JSONResponse.OK(Constants.SUCCESS_204);
             }
         } catch (MyBatisSystemException ex) {
             return JSONResponse.ERROR(Constants.ERROR_500, ex.getMessage());
         } catch (Exception ex) {
             return JSONResponse.ERROR(Constants.ERROR_408, ex.getMessage());
         }
-        return null;
     }
 
     /**
@@ -110,14 +143,25 @@ public class GePolicyController {
     public JSONResponse updatePolicyAndAddFavor(@RequestBody GeFavor geFavor) {
         try {
             if (geFavor != null && geFavor.getUserId() != null && geFavor.getUserId() > 0) {
-
+                int i = gePolicyService.updateByFavor(geFavor.getPolicyId());
+                if(i > 0){
+                    int insert = geFavorService.insert(geFavor);
+                    if(insert > 0){
+                        return  JSONResponse.OK(Constants.SUCCESS_200,insert);
+                    }else{
+                        return  JSONResponse.OK(Constants.SUCCESS_202,"添加失败，请联系管理员");
+                    }
+                }else{
+                    return  JSONResponse.OK(Constants.SUCCESS_202,"修改失败，请联系管理员");
+                }
+            }else{
+                return  JSONResponse.OK(Constants.SUCCESS_204,"修改失败，请联系管理员");
             }
         } catch (MyBatisSystemException ex) {
             return JSONResponse.ERROR(Constants.ERROR_500, ex.getMessage());
         } catch (Exception ex) {
             return JSONResponse.ERROR(Constants.ERROR_408, ex.getMessage());
         }
-        return null;
     }
 
     /**
@@ -129,7 +173,17 @@ public class GePolicyController {
         public JSONResponse updatePolicyAndAddComment(@RequestBody GeComment geComment) {
             try {
                 if (geComment != null && geComment.getUserId() != null && geComment.getUserId() > 0) {
-
+                    int i = gePolicyService.updateByComment(geComment.getPolicyId());
+                    if(i > 0){
+                        int insert = geCommentService.insert(geComment);
+                        if(insert > 0){
+                            return  JSONResponse.OK(Constants.SUCCESS_200,"添加成功");
+                        }else{
+                            return  JSONResponse.OK(Constants.SUCCESS_202,"添加失败，请联系管理员");
+                        }
+                    }else{
+                        return  JSONResponse.OK(Constants.SUCCESS_202,"修改失败，请联系管理员");
+                    }
                 }
             } catch (MyBatisSystemException ex) {
                 return JSONResponse.ERROR(Constants.ERROR_500, ex.getMessage());

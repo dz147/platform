@@ -86,7 +86,7 @@ public class GePolicyDetailController {
      * @info /policy/getByPager/{parameter} 分页查询政策结构表和政策表
      * @remark √
      */
-    @GetMapping("/policy/Detail/getByPager/{start}/{number}")
+    @GetMapping("/policy/detail/getByPager/{start}/{number}")
     public JSONResponse getByPolicyRawPager(@PathVariable("start") int start, @PathVariable("number") int number) {
         try {
             if (start > 0 && number > 0) {
@@ -104,7 +104,7 @@ public class GePolicyDetailController {
      * @info /policy/getByStatus/{三个参数} 根据状态分页查询政策结构表和政策表
      * @remark √
      */
-    @GetMapping("/policy/Detail/getByStatus/{start}/{number}/{status}")
+    @GetMapping("/policy/detail/getByStatus/{start}/{number}/{status}")
     public JSONResponse getByStatus(@PathVariable("start") int start, @PathVariable("number") int number, @PathVariable("status") String status) {
         try {
             if (start > 0 && number > 0 ) {
